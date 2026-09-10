@@ -23,5 +23,15 @@ pipeline {
         steps {
           sh 'echo Deploying'
         }
+
+    post {
+        success {
+            echo 'All stages passed'
+        }
+        failure {
+            echo 'Something failed'
+        }
+    }
+
       }
             
