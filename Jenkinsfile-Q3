@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Checkout') {    // This stage was outside the stages block -- Syntax error
             steps {
-                checkout scm
+                git url: 'https://github.com/Vrushank13Ahire/ci-demo-job.git'
             }
         }
 
@@ -18,7 +18,7 @@ pipeline {
 
         stage('Parallel Tests') {
             parallel {
-                stage('Unit Test') {
+                stage('Unit Test') {       // Curly Braces errors fixed HERE
                     steps {
                         sh 'npm test'
                     }
@@ -38,4 +38,4 @@ pipeline {
             sh 'rm -rf workspace/*'
         }
     }
-}
+}                                         // One curly bracket was missing here
