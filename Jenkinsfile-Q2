@@ -1,0 +1,43 @@
+pipeline{
+  agent any
+  stages {
+    stage ('Checkout'){
+      steps {
+        checkout scm
+      }
+    }
+
+    stage ('Build'){
+      steps {
+        echo "building project'
+        echo 'Installing Dependencies'
+      }
+    }
+
+    stage ('Test'){
+      steps {
+        echo "Testing project'
+      }
+    }
+
+    stage ('Deploy') {
+      when{
+        branch 'main'
+      }
+      steps {
+        echo 'Deploying'
+      }
+    }
+  }
+  post {
+    always{
+      sh 'echo acherived test reports'
+    }
+    success{
+      sh 'echo Run Successful'
+    }
+    failure{
+      sh 'echo Run Fail'
+    }
+  }
+}
