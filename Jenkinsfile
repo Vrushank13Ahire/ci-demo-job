@@ -1,37 +1,41 @@
 pipeline {
-  agent any {
+    agent any
+
     stages {
-      stage ('Checkout') {
-        steps {
-          checkoutscm
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
         }
 
-      stage ('Build') {
-        steps {
-          echo "Installing Dependencies"
+        stage('Build') {
+            steps {
+                echo 'Installing Dependencies'
+                sh 'npm install'
+                sh 'npm run build'
+            }
         }
 
-      stage ('Test') {
-        steps {
-          echo "Installing Dependencies"
-        }
+        stage('Parallel Tests') {
+            parallel {
+                stage('Unit Test') {
+                    steps {
+                        sh 'npm test'
+                    }
+                }
 
-      stage ('Deploy') {
-        when {
-          branch 'main'
-        }
-        steps {
-          sh 'echo Deploying'
-        }
-
-    post {
-        success {
-            echo 'All stages passed'
-        }
-        failure {
-            echo 'Something failed'
+                stage('Lint') {
+                    steps {
+                        sh 'npm run lint'
+                    }
+                }
+            }
         }
     }
 
-      }
-            
+    post {
+        always {
+            sh 'rm -rf workspace/*'
+        }
+    }
+}
